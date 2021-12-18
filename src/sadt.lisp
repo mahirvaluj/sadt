@@ -18,11 +18,6 @@ producing a symbol in the current package."
           (replace name x :start1 index)
           (incf index len))))))
 
-(defmacro defadt (name &body clauses)
-  `(progn
-     (defclass ,name () ())
-     ,@(gen-clauses name clauses)))
-
 (defun gen-clauses (name clauses)
   (mapcar
    #'(lambda (clause)
@@ -35,6 +30,11 @@ producing a symbol in the current package."
                                        :accessor ,var-name))
                        vars)))))
    clauses))
+
+(defmacro defadt (name &body clauses)
+  `(progn
+     (defclass ,name () ())
+     ,@(gen-clauses name clauses)))
 
 (defmacro make-adt (name tag &body arg-plist)
   `(make-instance ',(symbolicate name "-" (symbol-name tag))
