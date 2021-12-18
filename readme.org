@@ -1,0 +1,61 @@
+#+Title sadt
+
+* What's this?
+  A simple ADT implementation in common lisp! It uses CLOS to do
+  pattern matching with ~typep~ and subclasses of a superclass to
+  implement the different clauses of the type.
+
+  
+* Simple example?
+  Sure, there's an implementation of a list adt with ~NIL~ and ~CONS~
+  clauses in [[./example.lisp]].
+  
+* What do you actually provide?
+** ~defadt~
+*** ~(defadt name &body clauses)~
+    Takes the name of the ADT to declare, and clauses which consist of
+    a name, followed by a list of variables which declares what the
+    ADT will hold. Looks like:
+    #+begin_src lisp
+      (defadt object
+        (obj-a thing other-thing)
+        (obj-b wowza))
+    #+end_src
+** ~make-adt~
+*** ~(make-adt name tag arg-plist)~
+    Constructs an ADT. Takes a name (the name you declared in
+    make-adt, in the above case it would be "object") followed by a
+    tag, which is the clause you'd like to construct, in this case
+    your options are "obj-a" or "obj-b" (don't quote the symbol, it's
+    a macro) followed by a plist which gets passed to make-instance to
+    bind the variables of the ADT. Looks like:
+    #+begin_src lisp
+      (make-adt object obj-a
+          :thing 'thing :other-thing "other-thing!")
+    #+end_src
+
+** ~match~
+*** ~(match name var &body clauses)~
+    Does (non-fully-featured) pattern matching based on the type of
+    the variable. ~name~ is the name of the type that you mentioned
+    earlier, i.e. in this example it would be ~object~, ~var~ is an
+    object that you're doing pattern matching on, and ~clauses~ are
+    the patterns that get matched.
+
+    Similarly to ~cond~, each clause consists of ~((name &rest
+    vars-to-bind) body)~, where the ~name~ is the ~tag~ which was
+    constructed, the ~vars-to-bind~ are the variables that will be
+    bound in ~body~, and ~body~ is some code to execute. As a
+    ~var-to-bind~, you can either pass a symbol, which will then get
+    bound as the symbol, and also access that slot on the object, or,
+    pass a list ~(slot bind-symbol)~ which will access ~slot~ and bind
+    ~bind-symbol~ to the value of the slot.
+
+    Looks like:
+    #+begin_src lisp
+      (match object *obj*
+        ((obj-a thing (other-thing other-name))
+         (format t "object A! ~A ~A~%" other-name thing))
+        ((obj-b (wowza thing))
+         (format t "object B! ~A" thing)))
+    #+end_src
