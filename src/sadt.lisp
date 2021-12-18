@@ -1,8 +1,8 @@
-(defpackage :adt
+(defpackage :sadt
   (:use :cl :cl-user)
   (:export :defadt :make-adt :match))
 
-(in-package :adt)
+(in-package :sadt)
 
 ;;; taken from alexandria
 (defun symbolicate (&rest things)
