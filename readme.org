@@ -1,4 +1,4 @@
-#+Title sadt
+#+Title: sadt
 
 * What's this?
   A simple ADT implementation in common lisp! It uses CLOS to do
