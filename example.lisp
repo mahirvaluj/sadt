@@ -11,4 +11,4 @@
 (defun show (thing)
   (match list-adt thing
     ((nil) (list :its-a-nil))
-    ((cons hd tl) (list hd tl :its-a-cons))))
+    ((cons hd (tl other-name)) (list hd other-name :its-a-cons))))
